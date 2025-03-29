@@ -2,7 +2,7 @@ const MenuItem = require('../models/MenuItem');
 
 const getMenuItems = async (req, res) => {
     try{
-        const menuItems = await MenuItem.find();
+        const menuItems = await MenuItem.find({userid:req.user.id});
         res.status(200).json(menuItems);
     } catch (error) {
         res.status(500).json({message: error.message});
@@ -12,7 +12,7 @@ const getMenuItems = async (req, res) => {
 const addMenuItem = async (req,res) => {
     const {name, description, price, category} = req.body;
     try{
-        const newMenuItem = await newMenuItem.create({name, description, price, category});
+        const newMenuItem = await MenuItem.create({name, description, price, category});
         res.status(201).json(newMenuItem);
     } catch(error){
         res.status(500).json({Message: error.message});
@@ -22,7 +22,7 @@ const addMenuItem = async (req,res) => {
 const updateMenuItem = async (req,res) => {
     const {name, description, price, category} = req.body;
     try{
-        const MenuItem = await MenuItem.findByld(req.params.id);
+        const MenuItem = await MenuItem.findById(req.params.id);
         if (!MenuItem) return res.status(404).json({message: 'MenuItem not found'});
 
         MenuItem.name = name || MenuItem.name;
@@ -39,7 +39,7 @@ const updateMenuItem = async (req,res) => {
 
 const deleteMenuItem = async (req,res) => {
     try{
-        const MenuItem = await MenuItem.findByld(req.params.id);
+        const MenuItem = await MenuItem.findById(req.params.id);
         if (!MenuItem) return res.status(404).json({message: 'MenuItem not found'});
 
         await MenuItem.remove();
