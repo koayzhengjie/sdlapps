@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import axiosInstance from '../axiosConfig';
 import MenuItem from '../components/MenuItem';
 
@@ -21,7 +21,7 @@ const MenuPage = () => {
             }
         };
 
-        fetchMenu();
+        fetchMenuItems();
     }, []);
 
     if (loading) {

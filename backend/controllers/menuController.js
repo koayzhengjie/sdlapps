@@ -2,8 +2,8 @@ const MenuItem = require('../models/MenuItem');
 
 const getMenuItems = async (req, res) => {
     try{
-        const menuItems = await MenuItem.find({userid:req.user.id});
-        res.status(200).json(menuItems);
+        const MenuItems = await MenuItem.find();
+        res.status(200).json(MenuItems);
     } catch (error) {
         res.status(500).json({message: error.message});
     }
