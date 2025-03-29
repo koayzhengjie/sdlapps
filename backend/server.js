@@ -14,7 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api', require('./routes/customerRoutes'));
+app.use('/api/customers', require('./routes/customerRoutes'));
 app.use('/api/menu', require('./routes/menuRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 //app.use('/api/tasks', require('./routes/taskRoutes'));
