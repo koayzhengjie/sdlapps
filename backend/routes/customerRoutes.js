@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.post('/customers', addCustomer);
 router.get('/customers', getCustomers);
-router.put('/customers', updateCustomer);
-router.delete('/customers', deleteCustomer);
+router.put('/customers/:id', updateCustomer);
+router.delete('/customers/:id', deleteCustomer);
 
 module.exports = router;
