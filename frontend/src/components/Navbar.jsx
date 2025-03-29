@@ -17,6 +17,7 @@ const Navbar = () => {
         {user ? (
           <>
             <Link to="/menu" className="mr-4">Menu</Link>
+            <Link to="/customers" className="mr-4">Customers</Link>
             <Link to="/orders" className="mr-4">Order</Link>
             <Link to="/profile" className="mr-4">Profile</Link>
             <button
