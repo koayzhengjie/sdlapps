@@ -1,68 +1,54 @@
-# **Assignment: Full-Stack CRUD Application Development with DevOps Practices**
+# *Assignment: Restaurant Order Manager*
 
 ## **Objective**
+I have been tasked with creating a project through the use of Node.js, React.js and MongoDB to create an application that can implement CRUD operations. The progression of this assignment can be supported through industry practices such as 
+* JIRA usage
+* Requirement Diagram with use of SysML
+* GitHub Version Control
+* CI/CD implementation for automatic deployments
 
-You have been provided with a starter project that includes user authentication using  **Node.js, React.js, and MongoDB**. Your task is to extend this application by implementing **CRUD (Create, Read, Update, Delete) operations** for a real-world application of your choice, while following industry best practices such as:
 
-* **Project Management with JIRA**
-* **Requirement Diagram using SysML**
-* **Version Control using GitHub**
-* **CI/CD Integration for Automated Deployment**
+## **Prerequisite**
+Install the following before commencing the application
+* Nodejs [https://nodejs.org/en]
+* Git [https://git-scm.com/]
+* VS code editor [https://code.visualstudio.com/]
+* MongoDB Account [https://account.mongodb.com/account/login]
+* GitHub Account [https://github.com/signup?source=login]
+* Access to EC2 [https://d-97671c4bd0.awsapps.com/start#/]
+* Putty [https://www.puttygen.com/#gsc.tab=0]
 
-## **Requirements**
+## **Project Setup**
+* Clone repository: git clone [https://github.com/koayzhengjie/sdlapps.git]
+* Navigate to project folder: cd sdlapps
+* Install dependencies: npm install | yarn install
+* Set up environment: cp .env // edit .env as needed
+* Run application: npm start 
 
-### **1. Choose a Real-World Application**
+## ** CI/CD Pipeline Setup**
+* Description: Automation of the whole git process, which allows for an easier time testing, building and pushing the application out.
+* Tools & Service: GitHub, GitHub Actions, AWS, Puddy
+* Setup:
+   *  Clone repository: git clone [https://github.com/koayzhengjie/sdlapps.git]
+   *  Install dependencies: npm install | yarn install
+   *  Configuration
+   *  Name: CI/CD Pipeline
 
-Select a meaningful use case for your CRUD operations. We will provide the list, you have to select it.
+on:
+    push:
+        branches:
+            - main
 
-### **2. Project Management with JIRA and SysML**
+jobs:
+    deploy: 
+        name: Deploy Backend & Frontend
+        runs-on: self-hosted
 
-* Create a **JIRA project** and define:
-  * **Epic**
-  * **User Stories** (features required in your app)
-  * **Child issues & Subtasks** (breaking down development work)
-  * **Sprint Planning** (organizing work into milestones)
-* Document your JIRA **board URL** in the project README.
-* Draw a requirements diagram
+        strategy:
+            matrix:
+                node-version: [22]
+        
+        environment: MONGO_URI
+  
 
-### **3. Backend Development (Node.js + Express + MongoDB)**
 
-* Create a user-friendly interface to interact with your API (Some portion developed, follow task manager app)).
-* Implement **forms** for adding and updating records.
-* Display data using  **tables, cards, or lists (Follow how we showed data in task manager app)**
-
-### **4. Frontend Development (React.js)**
-
-* Create a user-friendly interface to interact with your API (**Some portion developed, follow task manager app)**.
-* Implement **forms** for adding, showing, deleting and updating records (CRUD).
-* Display data using  **tables, cards, or lists (Follow how we showed data in task manager app)**
-
-### **5. Authentication & Authorization**
-
-* Ensure **only authenticated users** can access and perform CRUD operations. (Already developed in your project)
-* Use **JWT (JSON Web Tokens)** for user authentication (Use the task manager one from .env file).
-
-### **6. GitHub Version Control & Branching Strategy**
-
-* Use **GitHub for version control** and maintain:
-  * `main` branch (stable production-ready code)
-  * Feature branches (`feature/xyz`) for each new functionality
-* Follow proper **commit messages** and  **pull request (PR) reviews** .
-
-### **7. CI/CD Pipeline Setup**
-
-* Implement a **CI/CD pipeline using GitHub Actions** to:
-  * Automatically **run tests** on every commit/pull request (Optional).
-  * Deploy the **backend** to **AWS** .
-  * Deploy the **frontend** to **AWS**.
-* Document your  **CI/CD workflow in the README** .
-
-## **Submission Requirements**
-
-* **JIRA Project Board URL** (user stories ).
-* **Requirment diagram** (Using project features)
-* **GitHub Repository** (`backend/` and `frontend/`).
-* **README.md** with:
-
-  * Project setup instructions.
-  * CI/CD pipeline details.
