@@ -32,7 +32,7 @@ Install the following before commencing the application
    *  Clone repository: git clone [https://github.com/koayzhengjie/sdlapps.git]
    *  Install dependencies: npm install | yarn install
    *  Configuration
-   *  Name: CI/CD Pipeline
+Name: CI/CD Pipeline
 
 on:
     push:
@@ -43,11 +43,9 @@ jobs:
     deploy: 
         name: Deploy Backend & Frontend
         runs-on: self-hosted
-
         strategy:
             matrix:
                 node-version: [22]
-        
         environment: MONGO_URI
   
 
