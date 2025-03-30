@@ -61,7 +61,7 @@ jobs:
         - name: Restart Backend
           working-directory: ./backend
           run: |
-              pm2 restart all
+              pm2 restart all || true
 
         - name: Install Frontend Dependencies
           working-directory: ./frontend
