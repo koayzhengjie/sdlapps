@@ -38,7 +38,10 @@ jobs:
               echo "JWT_SECRET is set"
               echo "PORT is set"
 
-        - run: pm2 stop all 
+        - name: Check and Stop PM2
+          run: |
+            pm2 list || true
+            pm2 stop all || true
 
         - name: Install Backend dependencies
           working-directory: ./backend
