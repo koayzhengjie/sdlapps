@@ -6,7 +6,7 @@ on:
             - main
 
 jobs:
-    deploy: 
+deploy: 
         name: Deploy Backend & Frontend
         runs-on: ubuntu-latest
 
