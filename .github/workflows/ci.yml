@@ -17,58 +17,57 @@ jobs:
         environment: MONGO_URI
 
         steps:
-        -name: Checkout code                    
-        uses: actions/checkout@v3
+        - name: Checkout code                    
+          uses: actions/checkout@v3
         
-        -name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-            node-version: ${{ matrix.node-version }}
+        - name: Set up Node.js
+          uses: actions/setup-node@v3
+          with:
+              node-version: ${{ matrix.node-version }}
         
-        -name: Print Env Secret
-            
-        env:
-            MONGO_URI: ${{ secrets.MONGO_URI}}
-            JWT_SECRET: ${{ secrets.JWT_SECRET }}
-            PORT: ${{ secrets.PORT }}
-        run: |
-        echo "MONGO_URI is set"
-        echo "JWT_SECRET is set"       
-        echo "PORT is set"
+        - name: Print Env Secret
+          env:
+              MONGO_URI: ${{ secrets.MONGO_URI }}
+              JWT_SECRET: ${{ secrets.JWT_SECRET }}
+              PORT: ${{ secrets.PORT }}
+          run: | 
+              echo "MONGO_URI is set"
+              echo "JWT_SECRET is set"
+              echo "PORT is set"
 
         - run: pm2 stop all 
 
-        -name: Install Backend dependencies
-        working-directory: ./backend
-        run: |
-            npm install --global yarn
-            yarn --version
-            yarn install
+        - name: Install Backend dependencies
+          working-directory: ./backend
+          run: |
+              npm install --global yarn
+              yarn --version
+              yarn install
 
-        -name: Setup Backend Variables
-        working-directory: ./backend
-        run: |
-                touch .env
-                echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
-                echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-                echo "PORT+${{ secrets.PORT }}" >> .env
+        - name: Setup Backend Variables
+          working-directory: ./backend
+          run: |
+              touch .env
+              echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
+              echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+              echo "PORT=${{ secrets.PORT }}" >> .env
         
-        -name: Restart Backend
-        working-directory: ./backend
-        run: |
-                pm2 restart all
+        - name: Restart Backend
+          working-directory: ./backend
+          run: |
+              pm2 restart all
 
-        -name: Install Frontend Dependencies
-        working-directory: ./frontend
-        run: |
-                yarn install
-                yarn run build
+        - name: Install Frontend Dependencies
+          working-directory: ./frontend
+          run: |
+              yarn install
+              yarn run build
         
-        -name: Copy Frontend Build to Server
-        run: |
-                sudo rm-rf /var/www/html/*
-                sudo cp -r ./frontend/build* /var/www/html/
+        - name: Copy Frontend Build to Server
+          run: |
+              sudo rm -rf /var/www/html/*
+              sudo cp -r ./frontend/build/* /var/www/html/
 
-        -name: Restart Web Server
-        run: |
-            sudo systemctl restart nginx
+        - name: Restart Web Server
+          run: |
+              sudo systemctl restart nginx
