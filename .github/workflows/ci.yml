@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD Pipeline
 
 on:
     push:
@@ -9,20 +9,100 @@ on:
             - main
 
 jobs:
-    build:
+    test: 
+        name: Run Tests
         runs-on: ubuntu-latest
 
+        strategy:
+            matrix:
+                node-version: [22]
+
         steps:
-        - name: Checkout code
-            uses: actions/checkout@v2
+        - name: Checkout code                    
+            uses: actions/checkout@v3
 
         - name: Set up Node.js
-            uses: actions/setup-node@v2
-            with:
-                node-version: '14'
+        uses: actions/setup-node@v3
+        with:
+            node-version: ${{ 22 }}
+        
+        - name: Print Env Secret
+        env:
+            MONGO_URI: ${{ secrets.MONGO_URI}}
+            JWT_SECRET: ${{ secrets.JWT_SECRET }}
+            PORT: ${{ secrets.PORT }}
+        run: |
+            echo "MONGO_URI is set"
+            echo "JWT_SECRET is set"
+            echo "PORT is set"
 
-        - name: Install dependencies
-            run: npm install
+        - run: pm2 stop all 
 
-        - name: Run tests
+        - name: Install Backend dependencies
+            working-directory: ./backend
+            run: |
+                npm install --global yarn
+                yarn --version
+                yarn install
+
+         - name: Install Frontend Dependencies
+            working-directory: ./frontend
+            run: |
+                df -h
+                sudo rm -rf ./build
+                yarn install
+                yarn run build
+                
+
+        - name: Run Backend tests
+            working-directory: ./backend
+            env:
+                MONGO_URI: ${{ secrets.MONGO_URI }}
+                JWT_SECRET: ${{ secrets.JTW_SECRET }}
+                PORT: ${{ secrets.PORT }}
             run: npm test
+
+            - run: npm ci
+            - run: |
+                cd ./backend
+                touch .env
+                echo "${{ secrets. PROD }}" > .env
+            - run: pm2 start all
+
+            - run: pm2 restart all
+    deploy:
+        name: Deploy to AWS
+        needs: test
+        runs-on: self-hosted
+
+        steps:
+            - name: Checkout Code
+            uses: actions/checkout@v3
+        
+            -name: Set up SSH
+            run: | 
+                echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
+                chmod 600 private_key.pem
+            
+            -name: Deploy Backend
+            run: |
+             ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF' cd /home/ubuntu/app/backend || mkdir -p /home/ubuntu/app/backend && cd /home/ubuntu/app/backend
+             git pull origin main
+             npm install
+
+            echo "MONGO_URI:${{ secrets.MONGO_URI }}" > .env
+            echo "JWT_SECRET: ${{ secrets.JWT_SECRET }}" >> .env
+            echo "PORT: ${{ secrets.PORT }}" >> .env
+
+            pm2 restart backend || pm2 start server.js --name backend
+            EOF
+
+    -name: Deploy Frontend
+        run | 
+        ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF' cd /home/ubuntu/app/frontend || mkdir -p /home/ubuntu/app/frontend && cd /home/ubuntu/app/frontend
+        git pull origin main
+        npm install
+        yarn run build
+
+        pm2 restart frontend || pm2 serve build 3000 --name frontend
+        EOF
