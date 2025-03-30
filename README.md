@@ -32,8 +32,7 @@ Install the following before commencing the application
    *  Clone repository: git clone [https://github.com/koayzhengjie/sdlapps.git]
    *  Install dependencies: npm install | yarn install
    *  Configuration
-Name: CI/CD Pipeline
-
+   *   Name: CI/CD Pipeline
 on:
     push:
         branches:
